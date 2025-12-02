@@ -34,6 +34,24 @@ export default function Home() {
       alert("Something went wrong. Please try again later.");
     }
   };
+  const [reviewName, setReviewName] = useState("");
+const [reviewText, setReviewText] = useState("");
+const [reviewRating, setReviewRating] = useState(5);
+const [reviews, setReviews] = useState<{ name: string; text: string; rating: number; date: string }[]>([]);
+const [formSubmitted, setFormSubmitted] = useState(false);
+
+
+// Load reviews from localStorage on mount
+useEffect(() => {
+  const storedReviews = localStorage.getItem("reviews");
+  if (storedReviews) setReviews(JSON.parse(storedReviews));
+}, []);
+
+// Save reviews to localStorage whenever they change
+useEffect(() => {
+  localStorage.setItem("reviews", JSON.stringify(reviews));
+}, [reviews]);
+
 
   /* --------------------------------------------------------------------
         TYPEWRITER ANIMATION
@@ -107,9 +125,10 @@ export default function Home() {
             HERO SECTION
         ================================================================== */}
       <div
-        id="home"
-        className="min-h-screen bg-gradient-to-br from-black via-[#1a0a3b] to-black flex flex-col md:flex-row items-center justify-center px-6 md:px-20 py-10 gap-10"
-      >
+  id="home"
+  className="min-h-screen bg-gradient-to-br from-black via-[#1a0a3b] to-black flex flex-col md:flex-row items-center justify-center px-6 md:px-20 py-10 gap-6 md:gap-6"
+>
+
         {/* LEFT TEXT CONTENT */}
         <motion.div
           variants={containerVariants}
@@ -227,15 +246,15 @@ export default function Home() {
         viewport={{ once: true }}
       >
         <motion.h1
-          className="text-4xl md:text-5xl font-bold mb-12 flex ml-0 gap-3 text-center"
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <span className="text-white">About</span>
-          <span className="text-purple-500">Me</span>
-        </motion.h1>
+  className="text-4xl md:text-5xl font-bold mb-12 flex justify-center ml-40 gap-3 text-center"
+  initial={{ opacity: 0, scale: 0.8 }}
+  whileInView={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.8, delay: 0.2 }}
+  viewport={{ once: true }}
+>
+  <span className="text-white">About</span>
+  <span className="text-purple-500">Me</span>
+</motion.h1>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-20">
           {/* ABOUT IMAGE */}
@@ -348,6 +367,102 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
+
+    {/* ==================================================================
+     PROJECTS SECTION (Fully Responsive + Stagger Animation)
+================================================================== */}
+<motion.section
+  id="projects"
+  className="w-full px-4 sm:px-6 md:px-20 py-20 bg-gradient-to-br from-black via-[#0d001a] to-black text-white"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.2 }}
+>
+  {/* ---------------------- Heading ---------------------- */}
+  <motion.h1
+    className="text-3xl sm:text-4xl md:text-5xl font-bold mb-12 sm:mb-16 text-center flex items-center justify-center gap-3"
+    variants={{
+      hidden: { opacity: 0, scale: 0.8 },
+      visible: { opacity: 1, scale: 1, transition: { duration: 0.8 } },
+    }}
+  >
+    <span className="text-white">My</span>
+    <span className="text-purple-500">Projects</span>
+  </motion.h1>
+
+  {/* ---------------------- Projects Grid ---------------------- */}
+  <motion.div
+    className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 max-w-6xl mx-auto"
+    variants={{
+      hidden: {},
+      visible: { transition: { staggerChildren: 0.25 } }, // one-by-one animation
+    }}
+  >
+    {[
+      {
+        title: "Portfolio Website",
+        desc: "A modern animated portfolio built using Next.js, Framer Motion, and Tailwind CSS.",
+        img: "/myp.jpg",
+        github: "https://github.com/umar24012003/Portfolio.git"
+      },
+      {
+        title: "Financial Management Website",
+        desc: "A secure system for budgeting, tracking expenses, and financial insights.",
+        img: "/gujratfans.jpg",
+        github: "https://github.com/umar24012003/finance-management.git"
+      },
+      {
+        title: "GujratFans Website",
+        desc: "Built a modern product showcase website for the GujratFans brand.",
+        img: "/gujratfans.jpg",
+        github: "https://github.com/umar24012003/GujratFans.git"
+      },
+      {
+        title: "Nexus-AI",
+        desc: "AI-powered final year project that improves productivity and automation.",
+        img: "/NexusAi.jpg",
+        github: "https://github.com/DanishAjma1/Nexus.git"
+      }
+    ].map((project, i) => (
+      <motion.div
+        key={i}
+        className="border border-purple-700/40 bg-[#150024]/60 rounded-2xl overflow-hidden shadow-[0_0_25px_#7c3aed] backdrop-blur-xl transition-all"
+        variants={{
+          hidden: { opacity: 0, y: 50 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+        }}
+        whileHover={{ scale: 1.03, rotateY: 4 }}
+        transition={{ type: "spring", stiffness: 160 }}
+      >
+        <Image
+          src={project.img}
+          alt={project.title}
+          width={600}
+          height={400}
+          className="w-full h-52 sm:h-56 md:h-60 object-cover"
+        />
+
+        <div className="p-5 sm:p-6">
+          <h3 className="text-xl sm:text-2xl text-purple-400 font-bold mb-2">{project.title}</h3>
+          <p className="text-gray-300 text-sm sm:text-md leading-relaxed">{project.desc}</p>
+
+          {/* GitHub Button */}
+          <div className="mt-4">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 border border-purple-400 rounded-lg text-purple-300 hover:bg-purple-600/30 transition-all text-sm sm:text-base"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </motion.div>
+    ))}
+  </motion.div>
+</motion.section>
+   
 
       {/* ==================================================================
        EXPERIENCE SECTION
@@ -518,6 +633,147 @@ export default function Home() {
           </div>
         </div>
       )}
+      
+      <motion.section
+  id="reviews"
+  className="w-full px-6 md:px-20 py-20 bg-gradient-to-br from-black via-[#0d001a] to-black text-white"
+  initial={{ opacity: 0, y: 80 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1 }}
+  viewport={{ once: true }}
+>
+  {/* Heading */}
+  <motion.h1
+    className="text-4xl md:text-5xl font-bold mb-12 text-center flex items-center justify-center gap-3"
+    initial={{ opacity: 0, scale: 0.8 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.8 }}
+  >
+    <span className="text-white">Client</span>
+    <span className="text-purple-500">Reviews</span>
+  </motion.h1>
+
+  {/* Average Rating */}
+  <div className="text-center mb-8">
+    <h3 className="text-xl text-purple-400 font-semibold mb-2">Average Rating</h3>
+    <div className="flex justify-center gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className={`text-2xl ${
+            star <= Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / (reviews.length || 1))
+              ? "text-yellow-400"
+              : "text-gray-500"
+          }`}
+        >
+          ★
+        </span>
+      ))}
+      <span className="ml-2 text-white font-medium">
+        ({(reviews.length
+          ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+          : 0
+        ).toFixed(1)})
+      </span>
+    </div>
+  </div>
+
+  {/* Review Form */}
+  {!formSubmitted && (
+    <motion.form
+      className="max-w-2xl mx-auto mb-12 flex flex-col gap-4 p-6 bg-[#1a002b]/70 rounded-xl shadow-[0_0_25px_#7c3aed] border border-purple-700/40"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (reviewName && reviewText) {
+          const newReview = {
+            name: reviewName,
+            text: reviewText,
+            rating: reviewRating,
+            date: new Date().toISOString(),
+          };
+          setReviews((prev) => [newReview, ...prev].slice(0, 3));
+          setFormSubmitted(true);
+        }
+      }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      <h2 className="text-2xl text-purple-400 font-bold text-center">Leave a Review</h2>
+
+      <input
+        type="text"
+        placeholder="Your Name"
+        value={reviewName}
+        onChange={(e) => setReviewName(e.target.value)}
+        className="w-full p-3 rounded-lg bg-black/60 border border-purple-600 text-white outline-none focus:border-purple-400 transition-all"
+        required
+      />
+
+      <textarea
+        placeholder="Your Review"
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
+        rows={4}
+        className="w-full p-3 rounded-lg bg-black/60 border border-purple-600 text-white outline-none focus:border-purple-400 transition-all"
+        required
+      />
+
+      {/* Star Rating Input */}
+      <div className="flex justify-center gap-2">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            type="button"
+            key={star}
+            onClick={() => setReviewRating(star)}
+            className={`text-2xl ${star <= reviewRating ? "text-yellow-400" : "text-gray-500"}`}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="bg-purple-600 hover:bg-purple-700 transition-all py-3 rounded-lg text-white font-semibold shadow-[0_0_20px_#7c3aed]"
+      >
+        Submit Review
+      </button>
+    </motion.form>
+  )}
+
+  {/* Display Top 3 Reviews */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {reviews.map((rev, i) => (
+      <motion.div
+        key={i}
+        className="p-6 bg-[#150024]/60 rounded-xl shadow-[0_0_25px_#7c3aed] backdrop-blur-xl border border-purple-700/40"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: i * 0.2 }}
+        viewport={{ once: true }}
+      >
+        {/* Review Rating */}
+        <div className="flex items-center mb-2">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span
+              key={star}
+              className={`text-lg ${star <= rev.rating ? "text-yellow-400" : "text-gray-500"}`}
+            >
+              ★
+            </span>
+          ))}
+        </div>
+
+        <p className="text-gray-300 mb-4">"{rev.text}"</p>
+        <p className="text-purple-400 font-semibold">- {rev.name}</p>
+      </motion.div>
+    ))}
+  </div>
+</motion.section>
+
+
     </>
   );
 }
