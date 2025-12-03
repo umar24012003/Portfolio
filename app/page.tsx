@@ -246,7 +246,7 @@ useEffect(() => {
         viewport={{ once: true }}
       >
         <motion.h1
-  className="text-4xl md:text-5xl font-bold mb-12 flex justify-center ml-40 gap-3 text-center"
+  className="text-4xl md:text-5xl font-bold mb-12 flex justify-center gap-3 text-center"
   initial={{ opacity: 0, scale: 0.8 }}
   whileInView={{ opacity: 1, scale: 1 }}
   transition={{ duration: 0.8, delay: 0.2 }}
@@ -408,7 +408,7 @@ useEffect(() => {
       {
         title: "Financial Management Website",
         desc: "A secure system for budgeting, tracking expenses, and financial insights.",
-        img: "/gujratfans.jpg",
+        img: "/financemanagement.jpg",
         github: "https://github.com/umar24012003/finance-management.git"
       },
       {
